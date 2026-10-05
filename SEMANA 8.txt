@@ -1,0 +1,34 @@
+-- 1. Listar todas las mantenciones con sus servicios
+SELECT 
+  m.num_mantencion,
+  m.cod_sucursal,
+  m.fecha_ingreso,
+  m.estado,
+  s.descripcion AS servicio,
+  d.cantidad,
+  d.descuento_serv,
+  (s.costo * d.cantidad) * (1 - d.descuento_serv) AS total_final
+FROM MANTENCION m
+JOIN DETALLE_SERVICIO d 
+  ON m.num_mantencion = d.num_mantencion 
+ AND m.cod_sucursal = d.cod_sucursal
+JOIN SERVICIO s 
+  ON d.id_servicio = s.id_servicio;
+
+-- 2. Total de servicios realizados por sucursal
+SELECT 
+  m.cod_sucursal,
+  COUNT(d.id_servicio) AS total_servicios
+FROM MANTENCION m
+JOIN DETALLE_SERVICIO d 
+  ON m.num_mantencion = d.num_mantencion 
+ AND m.cod_sucursal = d.cod_sucursal
+GROUP BY m.cod_sucursal;
+
+-- 3. Total facturado por cada mantención
+SELECT 
+  m.num_mantencion,
+  SUM((s.costo * d.cantidad) * (1 - d.descuento_serv)) AS total_mantencion
+FROM MANTENCION m
+JOIN DETALLE_SERVICIO d 
+  ON m.num_m
